@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { Provider } from 'react-redux';
 import logo from './assets/img/logo_arkademy.png';
 import arka from './assets/img/arka.png';
 import './assets/css/App.css';
 import classnames from 'classnames'
 import Body from './components';
+import store from './store';
 
 
 class App extends Component {
@@ -16,7 +18,7 @@ class App extends Component {
       btnBurger : false,
       navbar : 'Glosarium'
     }
-
+    
     this.dropdownProfile=this.dropdownProfile.bind(this)
     this.pageHandler=this.pageHandler.bind(this)
     this.btnBurger=this.btnBurger.bind(this)
@@ -27,13 +29,13 @@ class App extends Component {
       profile : !this.state.profile
     })
   }
-
+  
   pageHandler(e) {
     this.setState({
       navbar : e.target.name
     })
   }
-
+  
   btnBurger(){
     this.setState({
       btnBurger : !this.state.btnBurger
@@ -41,8 +43,9 @@ class App extends Component {
   }
   render() {
     const {profile, navbar, btnBurger} = this.state
-
+    
     return (
+      <Provider store={store}>
       <div className="page-wrapper">
       {/* Side Bar */}
       <aside className={classnames("menu-sidebar d-lg-block", { 'menu-sidebar-mobile' : btnBurger })}>
@@ -61,7 +64,7 @@ class App extends Component {
       </nav>
       </div>
       </aside>
-
+      
       {/* Page */}
       <div className="page-container">
       
@@ -72,9 +75,9 @@ class App extends Component {
       <div className="header-wrap">
       <div>
       <div className={classnames("btn-burger", {'change btn-burger-open' : btnBurger})} onClick={this.btnBurger}>
-        <div className="bar1"></div>
-        <div className="bar2"></div>
-        <div className="bar3"></div>
+      <div className="bar1"></div>
+      <div className="bar2"></div>
+      <div className="bar3"></div>
       </div>
       <h2 className="nav-title">{navbar}</h2>
       </div>
@@ -117,7 +120,7 @@ class App extends Component {
       </div>
       </div>
       </header>
-
+      
       {/* Content Frame */}
       <div className="main-content">
       <div className="section__content section__content--p5">
@@ -135,6 +138,7 @@ class App extends Component {
       </div>
       </div>
       </div>
+      </Provider>
     );
   }
 }
