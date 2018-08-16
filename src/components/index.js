@@ -18,7 +18,7 @@ export class index extends Component {
     }
     const content = body()
     return (
-      <div>
+      <div className="content-wrapper">
         {content}
       </div>
     )
@@ -26,7 +26,7 @@ export class index extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  
+  component : state.nav.navbar
 })
 
 const mapDispatchToProps = {

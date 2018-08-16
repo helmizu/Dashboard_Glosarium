@@ -1,11 +1,21 @@
-import { GET_ALL_DATA, SET_LOADING, DATA_INSERTED } from "../config/types";
+import { GET_ALL_DATA, SET_LOADING, DATA_INSERTED, GET_DATA } from "../config/types";
 import Axios from "axios";
 
-export const getAllData = () => dispatch => { 
+export const getAllData = (search = "") => dispatch => { 
     dispatch(setLoading())
-    Axios.get(`http://localhost:7000/glosarium/all`).then(res => 
+    Axios.get(`http://localhost:7000/glosarium/all?search=${search}`).then(res => 
         dispatch({
             type: GET_ALL_DATA,
+            payload: res.data
+        })
+    )        
+}
+
+export const getData = (label) => dispatch => { 
+    dispatch(setLoading())
+    Axios.get(`http://localhost:7000/glosarium?label=${label}`).then(res => 
+        dispatch({
+            type: GET_DATA,
             payload: res.data
         })
     )        

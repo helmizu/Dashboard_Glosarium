@@ -109,7 +109,11 @@
   right: 0;
   left: 300px;
   height: 60px;
-  z-index: 1;
+  z-index: 2;
+}
+
+.index-h-desktop {
+  z-index: 1 !important;
 }
 
 .header-desktop .section__content {
@@ -161,7 +165,6 @@
   -ms-flex-align: center;
   align-items: center;
 }
-
 
 .account-wrap {
   position: relative;
@@ -383,13 +386,17 @@
 }
 
 .modal {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, .25);
 }
+
 .modal-dialog {
-  top: 2vh;
+  top: 2.5vh;
   z-index: 9999 !important;
 }
 
+.limit {
+  max-width: 200px;
+}
 @media (max-width:992px){
   .menu-sidebar{
     width: 0;
@@ -416,31 +423,31 @@
     vertical-align: middle;
     transition: .5s;
   }
-
+  
   .btn-burger-open {
     margin-left: 0px;
   }
-
+  
   .bar1, .bar2, .bar3 {
-      width: 35px;
-      height: 5px;
-      background-color: #111;
-      margin: 6px 0;
-      transition: 0.4s;
+    width: 35px;
+    height: 5px;
+    background-color: #111;
+    margin: 6px 0;
+    transition: 0.4s;
   }
-
+  
   .change .bar1 {
-      -webkit-transform: rotate(-45deg) translate(-9px, 6px);
-      transform: rotate(-45deg) translate(-9px, 6px);
+    -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+    transform: rotate(-45deg) translate(-9px, 6px);
   }
-
+  
   .change .bar2 {opacity: 0;}
-
+  
   .change .bar3 {
-      -webkit-transform: rotate(45deg) translate(-8px, -8px);
-      transform: rotate(45deg) translate(-8px, -8px);
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(45deg) translate(-8px, -8px);
   }
-
+  
   .menu-sidebar-mobile {
     width: 300px !important;
     z-index: 3;
