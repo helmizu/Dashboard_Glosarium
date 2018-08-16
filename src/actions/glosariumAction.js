@@ -3,14 +3,11 @@ import Axios from "axios";
 
 export const getAllData = () => dispatch => { 
     dispatch(setLoading())
-    Axios.get(`http://localhost:7000/glosarium/all`).then(res => {
-
+    Axios.get(`http://localhost:7000/glosarium/all`).then(res => 
         dispatch({
             type: GET_ALL_DATA,
             payload: res.data
         })
-        console.log(res.data)
-    }
     )        
 }
 

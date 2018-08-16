@@ -66,7 +66,7 @@ export class RxGlosarium extends Component {
     componentDidMount = () => {
       this.props.getAllData()
     }
-    
+
     static propTypes = {
         data: PropTypes.array.isRequired,
         getAllData : PropTypes.func.isRequired,
@@ -75,7 +75,19 @@ export class RxGlosarium extends Component {
     
     render() {
         const { modal, nama, label, tags, pengertian, ilustrasi, penggunaan, labelFilter } = this.state
-        const { data } = this.props
+        var no = 1; 
+        const tabel = this.props.data.map(dt => {return(
+            <tr key={dt._id}>
+                <td>{no++}</td>
+                <td>{dt.nama}</td>
+                <td>{dt.label}</td>
+                <td>{dt.tags}</td>
+                <td>{dt.pengertian}</td>
+                <td><img src={dt.ilustrasi} alt={"Ilustrasi " + dt.nama} width="300px"/></td>
+                <td>{dt.penggunaan}</td>
+            </tr>
+        )})
+        console.log(this.props.data)
         return (
             <div className="card body-content">
             <div className="card-body">
@@ -91,7 +103,7 @@ export class RxGlosarium extends Component {
             <div className="form-group row">
             <div className="col-sm-10">
             <div className="input-group">
-            <input type="text" className="form-control" placeholder="Cari Komponen" aria-label="Search Component" aria-describedby="basic-addon2"/>
+            <input type="text" className="form-control" placeholder="Cari Nama Komponen" aria-label="Search Component" aria-describedby="basic-addon2"/>
             <div className="input-group-append">
             <span className="input-group-text bg-white" id="basic-addon2"><i className="fas fa-search"></i></span>
             </div>
@@ -126,15 +138,7 @@ export class RxGlosarium extends Component {
             </tr>
             </thead>
             <tbody>
-            <tr>
-            <th scope="row">1</th>
-            <td>Padding</td>
-            <td>CSS</td>
-            <td>Padding, CSS, Arkademy, Arkademy Glosarium</td>
-            <td>Padding adalah properti yang digunakan untuk menghasilkan ruang di sekitar konten elemen, di dalam batasan yang ditentukan</td>
-            <td><img src="" alt=""/></td>
-            <td>Ketika menggunakan padding...</td>
-            </tr>
+                {tabel}
             </tbody>
             </table>
             </div>
