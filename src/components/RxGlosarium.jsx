@@ -123,7 +123,7 @@ export class RxGlosarium extends Component {
             var d = b.nama.toLowerCase();
             if (x < y) {return -1;}
             if (x > y) {return 1;}
-            if (x = y) {
+            if (x === y) {
                 if (c < d) {return -1;}
                 if (c > d) {return 1;}
             }
