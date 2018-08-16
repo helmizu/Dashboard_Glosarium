@@ -1,7 +1,8 @@
-import { GET_DATA, SET_LOADING } from "../config/types";
+import { GET_DATA, SET_LOADING, DATA_INSERTED } from "../config/types";
 
 const initialState = {
     data : [],
+    report : '',
     loading : false
 }
 
@@ -11,6 +12,12 @@ export default (state = initialState, action) => {
         return { 
             ...state,
             data : action.payload,
+            loading : false
+        }
+        case DATA_INSERTED:
+        return { 
+            ...state,
+            report : action.payload,
             loading : false
         }
         case SET_LOADING: 
