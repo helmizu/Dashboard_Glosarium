@@ -1,4 +1,4 @@
-import { GET_ALL_DATA, SET_LOADING, DATA_INSERTED, GET_DATA, DATA_DELETED, DATA_UPDATED, UPDATE_VALUE } from "../config/types"
+import { GET_ALL_DATA, SET_LOADING, DATA_INSERTED, GET_DATA, DATA_DELETED, DATA_UPDATED, UPDATE_VALUE, GET_COLLECTION } from "../config/types"
 import Axios from "axios"
 
 export const getAllData = (search = "") => dispatch => { 
@@ -86,6 +86,16 @@ export const updateData = (id, data) => dispatch => {
         dispatch({
             type: DATA_UPDATED,
             payload : 'update error'
+        })
+    )
+}
+
+export const getCollection = () => dispatch => {
+    Axios.get(`http://localhost:7000/glosarium/collection`)
+    .then(res => 
+        dispatch({
+            type : GET_COLLECTION,
+            payload : res.data
         })
     )
 }

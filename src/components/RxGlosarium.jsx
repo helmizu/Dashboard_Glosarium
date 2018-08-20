@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
-import { getAllData, insertData, getData, deleteData, updateValue, updateData } from '../actions/glosariumAction'
+import { getAllData, insertData, getData, deleteData, updateValue, updateData, getCollection } from '../actions/glosariumAction'
 import { modalShow } from '../actions/navAction'
 
 export class RxGlosarium extends Component {
@@ -23,12 +23,14 @@ export class RxGlosarium extends Component {
             page : 1,
             pageNumber : [],
             search : "",
-            update : false
+            update : false,
+            newLabel : false
         }
-
+        
         this.modalHandler = this.modalHandler.bind(this)
         this.updateHandler = this.updateHandler.bind(this)
         this.deleteHandler = this.deleteHandler.bind(this)
+        this.newLabelHandler = this.newLabelHandler.bind(this)
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.fileChangedHandler = this.fileChangedHandler.bind(this)
@@ -41,7 +43,7 @@ export class RxGlosarium extends Component {
             this.setState({update : false})
         }
     }
-
+    
     updateHandler(label, komponen){
         this.props.modalShow(!this.props.modal)
         this.props.updateValue(label, komponen)
@@ -53,7 +55,11 @@ export class RxGlosarium extends Component {
             this.props.deleteData(label, id)
         }
     }
-
+    
+    newLabelHandler() {
+        this.setState({newLabel : !this.state.newLabel})
+    }
+    
     onChange(e) {
         this.setState({
             [e.target.name] : e.target.value
@@ -68,7 +74,7 @@ export class RxGlosarium extends Component {
     
     onSubmit(e) {
         e.preventDefault()
-
+        
         const formData = new FormData()
         if (this.state.ilustrasiFile.name == null) {
             formData.append('nama', this.state.nama.toLowerCase())
@@ -111,17 +117,18 @@ export class RxGlosarium extends Component {
     
     componentDidMount = () => {
         this.props.getAllData()
+        this.props.getCollection()
     }
     
     componentDidUpdate = (prevProps, prevState) => {
         if (prevProps.report !== this.props.report) {
             if (this.props.report === "") {
-
+                
             } else {
                 this.props.getAllData()
             }
         }
-
+        
         if (prevProps.data !== this.props.data) {
             this.setState({
                 nama : "",
@@ -135,20 +142,20 @@ export class RxGlosarium extends Component {
             })
             this.makePagination()
         }
-
+        
         if (prevProps.value !== this.props.value) {
             this.setState(this.props.value)
         }
-
+        
         if (prevState.limit !== this.state.limit) {
             this.makePagination()
             this.setState({ page : 1 })
         }
-
+        
         if (prevState.search !== this.state.search) {
             this.props.getAllData(this.state.search.toLowerCase())
         }
-
+        
         if (prevState.labelFilter !== this.state.labelFilter){
             if (this.state.labelFilter !== "") {
                 this.props.getData(this.state.labelFilter)
@@ -156,7 +163,7 @@ export class RxGlosarium extends Component {
                 this.props.getAllData()
             }
         }
-
+        
         if (prevProps.modal !== this.props.modal) {
             if (this.props.modal) {
                 
@@ -184,6 +191,7 @@ export class RxGlosarium extends Component {
     
     static propTypes = {
         data: PropTypes.array.isRequired,
+        label: PropTypes.array.isRequired,
         value: PropTypes.object.isRequired,
         report: PropTypes.string.isRequired,
         getData : PropTypes.func.isRequired,
@@ -193,11 +201,12 @@ export class RxGlosarium extends Component {
         modalShow : PropTypes.func.isRequired,
         deleteData : PropTypes.func.isRequired,
         updateValue : PropTypes.func.isRequired,
-        updateData : PropTypes.func.isRequired
+        updateData : PropTypes.func.isRequired,
+        getCollection : PropTypes.func.isRequired
     }
     
     render() {
-        const { nama, label, tags, pengertian, ilustrasi, ilustrasiFile, penggunaan, labelFilter, page, limit, search } = this.state
+        const { nama, label, tags, pengertian, ilustrasi, ilustrasiFile, penggunaan, labelFilter, page, limit, search, newLabel } = this.state
         const { modal } = this.props
         var no = 1
         this.sortData(this.props.data)
@@ -211,8 +220,8 @@ export class RxGlosarium extends Component {
             <td><img src={dt.ilustrasi} alt={"Ilustrasi " + dt.nama} width="200px"/></td>
             <td>{dt.penggunaan}</td>
             <td>
-                <button type="button" className="btn btn-orange btn-block" onClick={() => this.updateHandler(dt.label, dt.nama)}>Update</button>
-                <button type="button" className="btn btn-danger btn-block" onClick={() => this.deleteHandler(dt.label, dt._id)}>Delete</button>
+            <button type="button" className="btn btn-orange btn-block" onClick={() => this.updateHandler(dt.label, dt.nama)}>Update</button>
+            <button type="button" className="btn btn-danger btn-block" onClick={() => this.deleteHandler(dt.label, dt._id)}>Delete</button>
             </td>
             </tr>
         ))
@@ -286,9 +295,7 @@ export class RxGlosarium extends Component {
                 <div className="form-group">
                 <select name="labelFilter" value={labelFilter} onChange={this.onChange} className="custom-select" required>
                 <option value="">Semua Label</option>
-                <option value="CSS">CSS</option>
-                <option value="HTML">HTML</option>
-                <option value="PHP">PHP</option>
+                {this.props.label.map(lb => <option key={lb.info.uuid} value={lb.name}>{lb.name}</option>)}
                 </select>
                 </div>
                 </div>
@@ -348,36 +355,47 @@ export class RxGlosarium extends Component {
                 <div className="modal-body">                
                 {/* Body */}
                 <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Nama</label>
+                <label className="col-sm-2 col-form-label">Nama *</label>
                 <div className="col-sm-10">
-                <input name="nama" value={nama} onChange={this.onChange} type="text" className="form-control text-capitalize" placeholder="Nama Komponen"/>
+                <input name="nama" required value={nama} onChange={this.onChange} type="text" className="form-control text-capitalize" placeholder="Nama Komponen"/>
                 </div>
                 </div>
                 <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Label</label>
+                <label className="col-sm-2 col-form-label">Label *</label>
+                { newLabel ? 
+                (
+                    <div className="col-sm-10">
+                    <input name="label" required value={label} onChange={this.onChange} type="text" className="form-control" placeholder="Label Baru"/>
+                    <small className="float-right text-orange" onClick={this.newLabelHandler}><u>+ Pilih Label</u></small>
+                    </div>
+                ) 
+                : 
+                (
+                    <div className="col-sm-10">                    
+                    <select name="label" required value={label} onChange={this.onChange} className="custom-select">
+                    <option value="" selected disabled>Pilih Label</option>
+                    {this.props.label.map(lb => <option key={lb.info.uuid} value={lb.name}>{lb.name}</option>)}
+                    </select>
+                    <small className="float-right text-orange" onClick={this.newLabelHandler}><u>+ Tambah Label</u></small>
+                    </div>
+                ) 
+                }
+                
+                </div>
+                <div className="form-group row">
+                <label className="col-sm-2 col-form-label">Tags *</label>
                 <div className="col-sm-10">
-                <select name="label" value={label} onChange={this.onChange} className="custom-select">
-                <option value="" selected disabled>Pilih Label</option>
-                <option value="CSS">CSS</option>
-                <option value="HTML">HTML</option>
-                <option value="PHP">PHP</option>
-                </select>
+                <input name="tags" required value={tags} onChange={this.onChange} type="text" className="form-control" placeholder="Tags"/>
                 </div>
                 </div>
                 <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Tags</label>
+                <label className="col-sm-2 col-form-label">Pengertian *</label>
                 <div className="col-sm-10">
-                <input name="tags" value={tags} onChange={this.onChange} type="text" className="form-control" placeholder="Tags"/>
+                <textarea name="pengertian" required value={pengertian} onChange={this.onChange} className="form-control" placeholder="Pengertian" rows="3"/>
                 </div>
                 </div>
                 <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Pengertian</label>
-                <div className="col-sm-10">
-                <textarea name="pengertian" value={pengertian} onChange={this.onChange} className="form-control" placeholder="Pengertian" rows="3"/>
-                </div>
-                </div>
-                <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Ilustrasi</label>
+                <label className="col-sm-2 col-form-label">Ilustrasi (optional)</label>
                 <div className="col-sm-10">
                 <div className="custom-file">
                 <input name="ilustrasiFile" value="" onChange={this.fileChangedHandler} type="file" className="custom-file-input"/>
@@ -386,9 +404,9 @@ export class RxGlosarium extends Component {
                 </div>
                 </div>
                 <div className="form-group row">
-                <label className="col-sm-2 col-form-label">Penggunaan</label>
+                <label className="col-sm-2 col-form-label">Penggunaan *</label>
                 <div className="col-sm-10">
-                <textarea name="penggunaan" value={penggunaan} onChange={this.onChange} className="form-control" placeholder="Penggunaan" rows="3"/>
+                <textarea name="penggunaan" required value={penggunaan} onChange={this.onChange} className="form-control" placeholder="Penggunaan" rows="3"/>
                 </div>
                 </div>
                 </div>
@@ -410,7 +428,8 @@ export class RxGlosarium extends Component {
         data : state.glosarium.data,
         modal : state.nav.modal,
         value : state.glosarium.value,
-        report : state.glosarium.report
+        report : state.glosarium.report,
+        label : state.glosarium.label
     })
     
     const mapDispatchToProps = 
@@ -421,7 +440,8 @@ export class RxGlosarium extends Component {
         modalShow,
         deleteData,
         updateValue,
-        updateData
+        updateData,
+        getCollection
     }
     
     export default connect(mapStateToProps, mapDispatchToProps)(RxGlosarium)

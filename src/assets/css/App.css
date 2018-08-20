@@ -381,6 +381,11 @@
   border-color: #f47e00;
 }
 
+.text-orange {
+  color: #f47e00;
+  cursor: pointer;
+}
+
 .in {
   display: block !important;
 }
