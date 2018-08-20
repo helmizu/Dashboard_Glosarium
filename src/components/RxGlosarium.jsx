@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
-import { getAllData, insertData, getData } from '../actions/glosariumAction'
+import { getAllData, insertData, getData, deleteData, updateValue, updateData } from '../actions/glosariumAction'
 import { modalShow } from '../actions/navAction'
 
 export class RxGlosarium extends Component {
@@ -14,16 +14,21 @@ export class RxGlosarium extends Component {
             label : "",
             tags : "",
             pengertian : "",
-            ilustrasi : {},
+            ilustrasiFile : {},
+            ilustrasi : "",
             penggunaan : "",
             // table
             labelFilter : "",
             limit : 10,
             page : 1,
             pageNumber : [],
-            search : ""
+            search : "",
+            update : false
         }
+
         this.modalHandler = this.modalHandler.bind(this)
+        this.updateHandler = this.updateHandler.bind(this)
+        this.deleteHandler = this.deleteHandler.bind(this)
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.fileChangedHandler = this.fileChangedHandler.bind(this)
@@ -32,8 +37,23 @@ export class RxGlosarium extends Component {
     
     modalHandler(){
         this.props.modalShow(!this.props.modal)
+        if (this.state.update) {
+            this.setState({update : false})
+        }
+    }
+
+    updateHandler(label, komponen){
+        this.props.modalShow(!this.props.modal)
+        this.props.updateValue(label, komponen)
+        this.setState({update : true})
     }
     
+    deleteHandler(label, id){
+        if (window.confirm("Are you sure?")){
+            this.props.deleteData(label, id)
+        }
+    }
+
     onChange(e) {
         this.setState({
             [e.target.name] : e.target.value
@@ -48,22 +68,37 @@ export class RxGlosarium extends Component {
     
     onSubmit(e) {
         e.preventDefault()
-        const formData = new FormData()
-        formData.append('nama', this.state.nama.toLowerCase())
-        formData.append('label', this.state.label)
-        formData.append('tags', this.state.tags)
-        formData.append('pengertian', this.state.pengertian)
-        formData.append('ilustrasi', this.state.ilustrasi, this.state.ilustrasi.name)
-        formData.append('penggunaan', this.state.penggunaan)
-        this.props.insertData(formData)
-    }
 
+        const formData = new FormData()
+        if (this.state.ilustrasiFile.name == null) {
+            formData.append('nama', this.state.nama.toLowerCase())
+            formData.append('label', this.state.label)
+            formData.append('tags', this.state.tags)
+            formData.append('pengertian', this.state.pengertian)
+            formData.append('ilustrasi', this.state.ilustrasi)
+            formData.append('penggunaan', this.state.penggunaan)  
+        } else {
+            formData.append('nama', this.state.nama.toLowerCase())
+            formData.append('label', this.state.label)
+            formData.append('tags', this.state.tags)
+            formData.append('pengertian', this.state.pengertian)
+            formData.append('ilustrasi', this.state.ilustrasiFile, this.state.ilustrasiFile.name)
+            formData.append('penggunaan', this.state.penggunaan)
+        }
+        if (this.state.update) {
+            this.props.updateData(this.props.value._id, formData)
+        } else {
+            this.props.insertData(formData)
+        }  
+        this.props.modalShow(!this.props.modal)
+    }
+    
     clickHandler(e) {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
-
+    
     makePagination() {
         const arrayNumber = [];
         for (let i = 1; i <= Math.ceil(this.props.data.length / this.state.limit); i++) {
@@ -79,26 +114,41 @@ export class RxGlosarium extends Component {
     }
     
     componentDidUpdate = (prevProps, prevState) => {
+        if (prevProps.report !== this.props.report) {
+            if (this.props.report === "") {
+
+            } else {
+                this.props.getAllData()
+            }
+        }
+
         if (prevProps.data !== this.props.data) {
             this.setState({
-                modal : false,
                 nama : "",
                 label : "",
                 tags : "",
                 pengertian : "",
-                ilustrasi : {},
+                ilustrasiFile : {},
+                ilustrasi : "",
                 penggunaan : "",
                 page : 1
             })
             this.makePagination()
         }
+
+        if (prevProps.value !== this.props.value) {
+            this.setState(this.props.value)
+        }
+
         if (prevState.limit !== this.state.limit) {
             this.makePagination()
             this.setState({ page : 1 })
         }
+
         if (prevState.search !== this.state.search) {
             this.props.getAllData(this.state.search.toLowerCase())
         }
+
         if (prevState.labelFilter !== this.state.labelFilter){
             if (this.state.labelFilter !== "") {
                 this.props.getData(this.state.labelFilter)
@@ -106,6 +156,7 @@ export class RxGlosarium extends Component {
                 this.props.getAllData()
             }
         }
+
         if (prevProps.modal !== this.props.modal) {
             if (this.props.modal) {
                 
@@ -133,15 +184,20 @@ export class RxGlosarium extends Component {
     
     static propTypes = {
         data: PropTypes.array.isRequired,
+        value: PropTypes.object.isRequired,
+        report: PropTypes.string.isRequired,
         getData : PropTypes.func.isRequired,
         getAllData : PropTypes.func.isRequired,
         insertData : PropTypes.func.isRequired,
-        modal : PropTypes.string.isRequired,
-        modalShow : PropTypes.func.isRequired
+        modal : PropTypes.bool.isRequired,
+        modalShow : PropTypes.func.isRequired,
+        deleteData : PropTypes.func.isRequired,
+        updateValue : PropTypes.func.isRequired,
+        updateData : PropTypes.func.isRequired
     }
     
     render() {
-        const { nama, label, tags, pengertian, ilustrasi, penggunaan, labelFilter, page, limit, search } = this.state
+        const { nama, label, tags, pengertian, ilustrasi, ilustrasiFile, penggunaan, labelFilter, page, limit, search } = this.state
         const { modal } = this.props
         var no = 1
         this.sortData(this.props.data)
@@ -154,6 +210,10 @@ export class RxGlosarium extends Component {
             <td>{dt.pengertian}</td>
             <td><img src={dt.ilustrasi} alt={"Ilustrasi " + dt.nama} width="200px"/></td>
             <td>{dt.penggunaan}</td>
+            <td>
+                <button type="button" className="btn btn-orange btn-block" onClick={() => this.updateHandler(dt.label, dt.nama)}>Update</button>
+                <button type="button" className="btn btn-danger btn-block" onClick={() => this.deleteHandler(dt.label, dt._id)}>Delete</button>
+            </td>
             </tr>
         ))
         const renderPageNumbers = this.state.pageNumber.map(number => {
@@ -245,6 +305,7 @@ export class RxGlosarium extends Component {
                 <th scope="col">Pengertian</th>
                 <th scope="col">Ilustrasi</th>
                 <th scope="col">Penggunaan</th>
+                <th scope="col">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -264,14 +325,15 @@ export class RxGlosarium extends Component {
                 <div className="col-6">
                 <nav className="float-right">
                 <ul className="pagination">
-                    <li className={parseInt(this.state.page, 10)-1 < 1 ? "page-item disabled" : "page-item"}><button type="button" value={parseInt(this.state.page, 10)-1} name="page" className="page-link" onClick={this.clickHandler}>Previous</button></li>
-                    {renderPageNumbers}
-                    <li className={parseInt(this.state.page, 10)+1 > this.state.pageNumber.length ? "page-item disabled" : "page-item"}><button type="button" value={parseInt(this.state.page, 10)+1} name="page" className="page-link" onClick={this.clickHandler}>Next</button></li>
+                <li className={parseInt(this.state.page, 10)-1 < 1 ? "page-item disabled" : "page-item"}><button type="button" value={parseInt(this.state.page, 10)-1} name="page" className="page-link" onClick={this.clickHandler}>Previous</button></li>
+                {renderPageNumbers}
+                <li className={parseInt(this.state.page, 10)+1 > this.state.pageNumber.length ? "page-item disabled" : "page-item"}><button type="button" value={parseInt(this.state.page, 10)+1} name="page" className="page-link" onClick={this.clickHandler}>Next</button></li>
                 </ul>
                 </nav>
                 </div>
                 </div>
                 </div>
+                
                 {/* Modal */}
                 <div className={classnames("modal fade show", {"in" : modal})} id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div className="modal-dialog modal-lg" role="document" style={{display : "block"}}>
@@ -318,8 +380,8 @@ export class RxGlosarium extends Component {
                 <label className="col-sm-2 col-form-label">Ilustrasi</label>
                 <div className="col-sm-10">
                 <div className="custom-file">
-                <input name="ilustrasi" value='' onChange={this.fileChangedHandler} type="file" className="custom-file-input"/>
-                <label className="custom-file-label">{ilustrasi.name ? ilustrasi.name : "Pilih Gambar"}</label>
+                <input name="ilustrasiFile" value="" onChange={this.fileChangedHandler} type="file" className="custom-file-input"/>
+                <label className="custom-file-label">{ilustrasiFile.name ? ilustrasiFile.name : (ilustrasi ? ilustrasi.slice(0, 70) : "Pilih Gambar")}</label>
                 </div>
                 </div>
                 </div>
@@ -338,6 +400,7 @@ export class RxGlosarium extends Component {
                 </div>
                 </div>
                 </div>
+                
                 </div>      
             )
         }
@@ -345,7 +408,9 @@ export class RxGlosarium extends Component {
     
     const mapStateToProps = (state) => ({
         data : state.glosarium.data,
-        modal : state.nav.modal
+        modal : state.nav.modal,
+        value : state.glosarium.value,
+        report : state.glosarium.report
     })
     
     const mapDispatchToProps = 
@@ -353,7 +418,10 @@ export class RxGlosarium extends Component {
         getAllData,
         insertData,
         getData,
-        modalShow
+        modalShow,
+        deleteData,
+        updateValue,
+        updateData
     }
     
     export default connect(mapStateToProps, mapDispatchToProps)(RxGlosarium)
