@@ -350,7 +350,7 @@ export class RxGlosarium extends Component {
                 <div className="form-group row">
                 <label className="col-sm-2 col-form-label">Nama</label>
                 <div className="col-sm-10">
-                <input name="nama" value={nama} onChange={this.onChange} type="text" className="form-control" placeholder="Nama Komponen"/>
+                <input name="nama" value={nama} onChange={this.onChange} type="text" className="form-control text-capitalize" placeholder="Nama Komponen"/>
                 </div>
                 </div>
                 <div className="form-group row">

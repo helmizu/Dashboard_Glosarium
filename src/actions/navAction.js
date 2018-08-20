@@ -1,4 +1,4 @@
-import { PROFILE_SHOW, NAVBAR_SELECTED, BTN_BURGER_SHOW, MODAL_SHOW } from "../config/types";
+import { PROFILE_SHOW, NAVBAR_SELECTED, BTN_BURGER_SHOW, MODAL_SHOW } from "../config/types"
 
 export const profileShow = (con) => ({
   type: PROFILE_SHOW,

@@ -1,4 +1,4 @@
-import { MODAL_SHOW, NAVBAR_SELECTED, PROFILE_SHOW, BTN_BURGER_SHOW } from "../config/types";
+import { MODAL_SHOW, NAVBAR_SELECTED, PROFILE_SHOW, BTN_BURGER_SHOW } from "../config/types"
 
 const initialState = {
     modal : false,

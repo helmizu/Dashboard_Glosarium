@@ -1,5 +1,5 @@
-import { GET_ALL_DATA, SET_LOADING, DATA_INSERTED, GET_DATA, DATA_DELETED, DATA_UPDATED, UPDATE_VALUE } from "../config/types";
-import Axios from "axios";
+import { GET_ALL_DATA, SET_LOADING, DATA_INSERTED, GET_DATA, DATA_DELETED, DATA_UPDATED, UPDATE_VALUE } from "../config/types"
+import Axios from "axios"
 
 export const getAllData = (search = "") => dispatch => { 
     dispatch(setLoading())
