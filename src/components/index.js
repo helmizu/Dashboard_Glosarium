@@ -9,7 +9,7 @@ import Login from './Login'
 export class index extends Component {
   static propTypes = {
     component: PropTypes.string.isRequired,
-    user : PropTypes.bool.isRequired,
+    user : PropTypes.bool
   }
 
   render() {

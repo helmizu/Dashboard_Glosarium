@@ -395,7 +395,6 @@
 }
 
 .modal-dialog {
-  top: 2.5vh;
   z-index: 9999 !important;
 }
 

@@ -8,8 +8,10 @@ import { userLogin } from './actions/glosariumAction';
 class App extends Component {
 
   componentWillMount = () => {
-    const data = sessionStorage.getItem('user')
-    store.dispatch(userLogin(JSON.parse(data)))
+    if(sessionStorage.getItem('user')){
+      const data = sessionStorage.getItem('user')
+      store.dispatch(userLogin(JSON.parse(data)))
+    }
   }
 
   render() {
