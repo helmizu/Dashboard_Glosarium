@@ -9,7 +9,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        
+
         case MODAL_SHOW:
         return { ...state, modal : action.payload }
         

@@ -402,6 +402,53 @@
 .limit {
   max-width: 200px;
 }
+
+.page-content--bge5 {
+  background: #e5e5e5;
+  height: 100vh;
+}
+
+.login-wrap {
+  max-width: 540px;
+  padding-top: 20vh;
+  margin: 0 auto;
+}
+
+.login-logo {
+  text-align: center;
+}
+
+.login-form .form-group label {
+  display: block;
+}
+
+.login-content {
+  background: #fff;
+  padding: 30px 30px 20px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+
+.au-input {
+  line-height: 43px;
+  border: 1px solid #e5e5e5;
+  font-size: 14px;
+  color: #666;
+  padding: 0 17px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+.au-input--full {
+  width: 100%;
+}
+
 @media (max-width:992px){
   .menu-sidebar{
     width: 0;

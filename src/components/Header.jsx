@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import classnames from 'classnames'
 import arka from '../assets/img/arka.png'
 import { profileShow, btnBurgerShow } from '../actions/navAction'
+import { userLogout } from '../actions/glosariumAction'
 
 export class Header extends Component {
   constructor(props) {
@@ -11,6 +12,11 @@ export class Header extends Component {
 
     this.dropdownProfile=this.dropdownProfile.bind(this)
     this.btnBurger=this.btnBurger.bind(this)
+    this.logoutHandler=this.logoutHandler.bind(this)
+  }
+
+  logoutHandler(){
+    this.props.userLogout()
   }
 
   dropdownProfile(){
@@ -27,7 +33,8 @@ export class Header extends Component {
     modal: PropTypes.bool.isRequired,
     navbar: PropTypes.string.isRequired,
     btnBurgerShow: PropTypes.func.isRequired,
-    profileShow: PropTypes.func.isRequired
+    profileShow: PropTypes.func.isRequired,
+    userLogout: PropTypes.func.isRequired
   }
 
   render() {
@@ -74,7 +81,7 @@ export class Header extends Component {
       </div>
       </div>
       <div className="account-dropdown__footer">
-      <a ><i className="fas fa-sign-out-alt"></i>Logout</a>
+      <a onClick={this.logoutHandler}><i className="fas fa-sign-out-alt"></i>Logout</a>
       </div>
       </div>
       </div>
@@ -98,7 +105,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   btnBurgerShow,
-  profileShow
+  profileShow,
+  userLogout
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header)

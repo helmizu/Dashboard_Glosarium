@@ -1,6 +1,7 @@
-import { GET_DATA, SET_LOADING, DATA_INSERTED, GET_ALL_DATA, DATA_DELETED, DATA_UPDATED, UPDATE_VALUE, GET_COLLECTION } from "../config/types";
+import { GET_DATA, SET_LOADING, DATA_INSERTED, GET_ALL_DATA, DATA_DELETED, DATA_UPDATED, UPDATE_VALUE, GET_COLLECTION, SET_USER } from "../config/types";
 
 const initialState = {
+    user : false,
     data : [],
     report : '',
     loading : false,
@@ -10,6 +11,13 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
+        
+        case SET_USER:
+        return { 
+            ...state, 
+            user : action.payload, 
+            loading : false 
+        }
         case GET_ALL_DATA:
         return {
             ...state,

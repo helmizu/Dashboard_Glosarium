@@ -28,7 +28,7 @@ export class Sidebar extends Component {
             <aside className={classnames("menu-sidebar d-lg-block", { 'menu-sidebar-mobile' : btnBurger })}>
             <div className="logo">
             <a>
-            <img src={logo} className="img" alt="Cool Admin" />
+            <img src={logo} className="img" alt="Arkademy" />
             </a>
             </div>
             <div className="menu-sidebar__content js-scrollbar1">

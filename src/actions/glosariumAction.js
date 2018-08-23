@@ -1,4 +1,4 @@
-import { GET_ALL_DATA, SET_LOADING, DATA_INSERTED, GET_DATA, DATA_DELETED, DATA_UPDATED, UPDATE_VALUE, GET_COLLECTION } from "../config/types"
+import { SET_USER, GET_ALL_DATA, SET_LOADING, DATA_INSERTED, GET_DATA, DATA_DELETED, DATA_UPDATED, UPDATE_VALUE, GET_COLLECTION } from "../config/types"
 import Axios from "axios"
 
 export const getAllData = (search = "") => dispatch => { 
@@ -98,6 +98,39 @@ export const getCollection = () => dispatch => {
             payload : res.data
         })
     )
+}
+
+export const userLogin = (data) => dispatch => {
+    dispatch(setLoading())
+    Axios.post(`http://localhost:7000/user`, data)
+    .then(res => {
+        if(res.status === 200) {
+            dispatch({
+                type: SET_USER,
+                payload : true
+            })
+            sessionStorage.setItem('user', JSON.stringify(res.data))
+        } else {
+            dispatch({
+                type: SET_USER,
+                payload: false
+            })
+        }
+    })
+    .catch(err => 
+        dispatch({
+            type: SET_USER,
+            payload: false
+        })
+    )
+}
+
+export const userLogout = () => dispatch => {
+    dispatch({
+        type : SET_USER,
+        user : false
+    })
+    sessionStorage.clear()
 }
 
 export const setLoading = () => ({
