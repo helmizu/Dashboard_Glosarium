@@ -6,14 +6,17 @@ import store from './store';
 import { userLogin } from './actions/glosariumAction';
 
 class App extends Component {
-
-  componentWillMount = () => {
+  cekUser() {
     if(sessionStorage.getItem('user')){
       const data = sessionStorage.getItem('user')
       store.dispatch(userLogin(JSON.parse(data)))
     }
   }
 
+  componentWillMount(){
+    this.cekUser()
+  }
+  
   render() {
     return (
       <Provider store={store}>
