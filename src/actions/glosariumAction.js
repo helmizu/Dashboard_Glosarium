@@ -109,7 +109,7 @@ export const userLogin = (data) => dispatch => {
                 type: SET_USER,
                 payload : true
             })
-            sessionStorage.setItem('user', JSON.stringify(res.data))
+            localStorage.setItem('user', JSON.stringify(res.data))
         } else {
             dispatch({
                 type: SET_USER,
@@ -130,7 +130,7 @@ export const userLogout = () => dispatch => {
         type : SET_USER,
         user : false
     })
-    sessionStorage.clear()
+    localStorage.clear()
 }
 
 export const setLoading = () => ({

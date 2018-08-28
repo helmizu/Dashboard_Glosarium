@@ -4,11 +4,12 @@ import './assets/css/App.css';
 import Body from './components';
 import store from './store';
 import { userLogin } from './actions/glosariumAction';
+import Axios from 'axios'
 
 class App extends Component {
   cekUser() {
-    if(sessionStorage.getItem('user')){
-      const data = sessionStorage.getItem('user')
+    if(localStorage.getItem('user')){
+      const data = localStorage.getItem('user')
       store.dispatch(userLogin(JSON.parse(data)))
     }
   }
