@@ -1,7 +1,6 @@
 import { SET_USER, GET_ALL_DATA, SET_LOADING, DATA_INSERTED, GET_DATA, DATA_DELETED, DATA_UPDATED, UPDATE_VALUE, GET_COLLECTION } from "../config/types"
 import Axios from "axios"
-
-const base_url = 'https://beta.arkademy.com/api/glosarium'
+import { base_url } from '../config'
 
 export const getAllData = (search = "") => dispatch => { 
     dispatch(setLoading())

@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import { connect } from 'react-redux'
 import { getAllData, insertData, getData, deleteData, updateValue, updateData, getCollection } from '../actions/glosariumAction'
 import { modalShow } from '../actions/navAction'
+import { base_url } from '../config'
 
 export class RxGlosarium extends Component {
     constructor(props){
@@ -217,7 +218,7 @@ export class RxGlosarium extends Component {
             <td>{dt.label}</td>
             <td>{dt.tags}</td>
             <td>{dt.pengertian}</td>
-            <td><img src={dt.ilustrasi} alt={"Ilustrasi " + dt.nama} width="200px"/></td>
+            <td><img src={`${base_url}/images/${dt.ilustrasi}`} alt={"Ilustrasi " + dt.nama} width="200px"/></td>
             <td>{dt.penggunaan}</td>
             <td>
             <button type="button" className="btn btn-orange btn-block" onClick={() => this.updateHandler(dt.label, dt.nama)}>Update</button>
