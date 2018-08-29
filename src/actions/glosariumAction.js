@@ -1,9 +1,11 @@
 import { SET_USER, GET_ALL_DATA, SET_LOADING, DATA_INSERTED, GET_DATA, DATA_DELETED, DATA_UPDATED, UPDATE_VALUE, GET_COLLECTION } from "../config/types"
 import Axios from "axios"
 
+const base_url = 'https://beta.arkademy.com/api/glosarium'
+
 export const getAllData = (search = "") => dispatch => { 
     dispatch(setLoading())
-    Axios.get(`http://localhost:7000/glosarium/all?search=${search}`)
+    Axios.get(`${base_url}/glosarium/all?search=${search}`)
     .then(res => 
         dispatch({
             type: GET_ALL_DATA,
@@ -14,7 +16,7 @@ export const getAllData = (search = "") => dispatch => {
 
 export const getData = (label) => dispatch => { 
     dispatch(setLoading())
-    Axios.get(`http://localhost:7000/glosarium?label=${label}`)
+    Axios.get(`${base_url}/glosarium?label=${label}`)
     .then(res => 
         dispatch({
             type: GET_DATA,
@@ -25,7 +27,7 @@ export const getData = (label) => dispatch => {
 
 export const insertData = (data) => dispatch => {
     dispatch(setLoading())
-    Axios.post(`http://localhost:7000/glosarium`, data)
+    Axios.post(`${base_url}/glosarium`, data)
     .then(res => 
         dispatch({
             type: DATA_INSERTED,
@@ -42,7 +44,7 @@ export const insertData = (data) => dispatch => {
 
 export const deleteData = (label, id) => dispatch => {
     dispatch(setLoading())
-    Axios.delete(`http://localhost:7000/glosarium?label=${label}&id=${id}`)
+    Axios.delete(`${base_url}/glosarium?label=${label}&id=${id}`)
     .then( res => 
         dispatch({
             type : DATA_DELETED,
@@ -58,7 +60,7 @@ export const deleteData = (label, id) => dispatch => {
 }
 
 export const updateValue = (label, komponen) => dispatch => {
-    Axios.get(`http://localhost:7000/glosarium?label=${label}&komponen=${komponen}`)
+    Axios.get(`${base_url}/glosarium?label=${label}&komponen=${komponen}`)
     .then(res => 
         dispatch({
             type: UPDATE_VALUE,
@@ -75,7 +77,7 @@ export const updateValue = (label, komponen) => dispatch => {
 
 export const updateData = (id, data) => dispatch => {
     dispatch(setLoading())
-    Axios.put(`http://localhost:7000/glosarium?id=${id}`, data)
+    Axios.put(`${base_url}/glosarium?id=${id}`, data)
     .then(res => 
         dispatch({
             type : DATA_UPDATED,
@@ -91,7 +93,7 @@ export const updateData = (id, data) => dispatch => {
 }
 
 export const getCollection = () => dispatch => {
-    Axios.get(`http://localhost:7000/glosarium/collection`)
+    Axios.get(`${base_url}/glosarium/collection`)
     .then(res => 
         dispatch({
             type : GET_COLLECTION,
@@ -102,7 +104,7 @@ export const getCollection = () => dispatch => {
 
 export const userLogin = (data) => dispatch => {
     dispatch(setLoading())
-    Axios.post(`http://localhost:7000/user`, data)
+    Axios.post(`${base_url}/user`, data)
     .then(res => {
         if(res.status === 200) {
             dispatch({
